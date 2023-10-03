@@ -2,14 +2,10 @@ package com.example.photogallery
 
 import com.example.photogallery.api.FlickrApi
 import com.example.photogallery.model.Photo
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import java.lang.Exception
 import java.lang.IllegalStateException
 
-class PhotosRepository private constructor() {
+class PhotosRepository private constructor(private val flickrApi: FlickrApi) {
     companion object {
         const val API_KEY = "1d2c19d89b02d3489dfc6beff4d123c1"
         const val FLICKR_BASE_URL = "https://api.flickr.com/services/"
@@ -19,27 +15,11 @@ class PhotosRepository private constructor() {
             return INSTANCE ?: throw IllegalStateException("PhotosRepository is null")
         }
 
-        fun initialize() {
+        fun initialize(flickrApi: FlickrApi) {
             if (INSTANCE == null) {
-                INSTANCE = PhotosRepository()
+                INSTANCE = PhotosRepository(flickrApi)
             }
         }
-    }
-
-    private val flickrApi: FlickrApi
-
-    init {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-        }
-        val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(FLICKR_BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .client(okHttpClient)
-            .build()
-        flickrApi = retrofit.create(FlickrApi::class.java)
     }
 
     suspend fun getPhotos(): List<Photo> {
