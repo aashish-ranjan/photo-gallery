@@ -72,6 +72,7 @@ class PhotoGalleryFragment: Fragment() {
         searchView?.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 photoGalleryViewModel.processSearchQuery(query ?: "")
+                searchView.clearFocus()
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {
