@@ -7,33 +7,36 @@ import com.example.photogallery.model.Photo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
-class PhotoGalleryViewModel(private val repository: PhotosRepository): ViewModel() {
+class PhotoGalleryViewModel(private val repository: PhotosRepository) : ViewModel() {
+    private val preferencesRepository = PreferencesRepository.getInstance()
 
-    private val _galleryItemsStateFlow : MutableStateFlow<List<Photo>> = MutableStateFlow(emptyList())
+    private val _galleryItemsStateFlow: MutableStateFlow<List<Photo>> =
+        MutableStateFlow(emptyList())
     val galleryItemsStateFlow = _galleryItemsStateFlow.asStateFlow()
 
     init {
-//        fetchGalleryPhotos()
-        fetchPhotosBySearchQuery(DEFAULT_SEARCH_QUERY)
-    }
-
-    private fun fetchGalleryPhotos() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _galleryItemsStateFlow.value = repository.getPhotos()
+        viewModelScope.launch {
+            preferencesRepository.searchQueryFlow.collectLatest { searchQuery ->
+                fetchPhotos(searchQuery)
+            }
         }
     }
 
-    fun fetchPhotosBySearchQuery(searchQuery: String) {
+    private fun fetchPhotos(searchQuery: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _galleryItemsStateFlow.value = repository.getPhotosBySearchQuery(searchQuery)
+            _galleryItemsStateFlow.value = if (searchQuery.isEmpty()) repository.getPhotos()
+            else repository.getPhotosBySearchQuery(searchQuery)
         }
     }
 
-    companion object {
-        const val DEFAULT_SEARCH_QUERY = "trees"
+    fun processSearchQuery(searchQuery: String) {
+        viewModelScope.launch {
+            preferencesRepository.saveSearchQuery(searchQuery)
+        }
     }
 }
 

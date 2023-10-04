@@ -70,7 +70,7 @@ class PhotoGalleryFragment: Fragment() {
         val searchView = searchItem.actionView as? SearchView
         searchView?.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                photoGalleryViewModel.fetchPhotosBySearchQuery(query ?: "")
+                photoGalleryViewModel.processSearchQuery(query ?: "")
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {

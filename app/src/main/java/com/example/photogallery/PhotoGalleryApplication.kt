@@ -28,5 +28,6 @@ class PhotoGalleryApplication: Application() {
             .build()
         val flickrApi = retrofit.create(FlickrApi::class.java)
         PhotosRepository.initialize(flickrApi)
+        PreferencesRepository.initialise(applicationContext)
     }
 }
