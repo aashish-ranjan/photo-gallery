@@ -12,6 +12,6 @@ data class GalleryItems(@Json(name = "photo") val photoList: List<Photo>)
 @JsonClass(generateAdapter = true)
 data class Photo(
     val id: String,
-    @Json(name = "url_s") val imageUrl: String,
+    @Json(name = "url_s") val imageUrl: String = "",
     val title: String
 )

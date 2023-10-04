@@ -26,7 +26,7 @@ class PhotoGalleryViewModel(private val repository: PhotosRepository): ViewModel
         }
     }
 
-    private fun fetchPhotosBySearchQuery(searchQuery: String) {
+    fun fetchPhotosBySearchQuery(searchQuery: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _galleryItemsStateFlow.value = repository.getPhotosBySearchQuery(searchQuery)
         }
