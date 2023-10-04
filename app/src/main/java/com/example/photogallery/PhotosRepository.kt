@@ -26,7 +26,7 @@ class PhotosRepository private constructor(private val flickrApi: FlickrApi) {
         return try {
             val response = flickrApi.getPhotos()
             if (response.stat == "ok") {
-                response.photos
+                response.photosData.photoList
             } else {
                 throw Exception("Something went wrong!")
             }
