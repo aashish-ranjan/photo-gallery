@@ -8,7 +8,7 @@ import java.lang.IllegalStateException
 class PhotosRepository private constructor(private val flickrApi: FlickrApi) {
     companion object {
         const val API_KEY = "1d2c19d89b02d3489dfc6beff4d123c1"
-        const val FLICKR_BASE_URL = "https://api.flickr.com/services/"
+        const val FLICKR_BASE_URL = "https://www.flickr.com/"
 
         private var INSTANCE: PhotosRepository? = null
         fun getInstance(): PhotosRepository {
