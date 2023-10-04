@@ -16,13 +16,24 @@ class PhotoGalleryViewModel(private val repository: PhotosRepository): ViewModel
     val galleryItemsStateFlow = _galleryItemsStateFlow.asStateFlow()
 
     init {
-        fetchGalleryPhotos()
+//        fetchGalleryPhotos()
+        fetchPhotosBySearchQuery(DEFAULT_SEARCH_QUERY)
     }
 
     private fun fetchGalleryPhotos() {
         viewModelScope.launch(Dispatchers.IO) {
             _galleryItemsStateFlow.value = repository.getPhotos()
         }
+    }
+
+    private fun fetchPhotosBySearchQuery(searchQuery: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _galleryItemsStateFlow.value = repository.getPhotosBySearchQuery(searchQuery)
+        }
+    }
+
+    companion object {
+        const val DEFAULT_SEARCH_QUERY = "trees"
     }
 }
 

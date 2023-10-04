@@ -34,4 +34,18 @@ class PhotosRepository private constructor(private val flickrApi: FlickrApi) {
             listOf()
         }
     }
+
+    suspend fun getPhotosBySearchQuery(searchQuery: String): List<Photo> {
+        return try {
+            val response = flickrApi.getPhotosBySearchQuery(searchQuery)
+            if (response.stat == "ok") {
+                response.photosData.photoList
+            } else {
+                throw Exception("Something went wrong!")
+            }
+        } catch (e: Exception) {
+            listOf()
+        }
+
+    }
 }
