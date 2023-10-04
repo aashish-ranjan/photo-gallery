@@ -9,7 +9,7 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
     <item
-        android:id="@+id/menu_item_clear_search_query"
+        android:id="@+id/menu_item_clear_search"
         android:title="@string/clear_search"
         app:showAsAction="never"/>
 </menu>
