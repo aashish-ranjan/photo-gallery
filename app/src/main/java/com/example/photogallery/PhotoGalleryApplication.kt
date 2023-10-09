@@ -12,6 +12,7 @@ class PhotoGalleryApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        createNotificationChannelIfApplicable(this)
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         }

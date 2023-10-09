@@ -7,4 +7,11 @@
     <string name="retry">Retry</string>
     <string name="no_results_found">No results found for the specified query</string>
     <string name="failed_loading_photos_message">Failed to load photos</string>
+
+    <string name="channel_name">New Photos Available</string>
+    <string name="channel_description">Updates about availability of new photos</string>
+
+    <string name="new_photos_available_title">New Photos available</string>
+    <string name="new_photos_available_description">Click here to explore our latest additions</string>
+
 </resources>
