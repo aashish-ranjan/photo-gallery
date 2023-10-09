@@ -4,8 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.photogallery.api.FlickrApi
 import com.example.photogallery.model.Photo
-import retrofit2.HttpException
-import java.io.IOException
+import java.lang.Exception
 
 class PhotoPagingSource(
     private val flickrApi: FlickrApi,
@@ -14,14 +13,14 @@ class PhotoPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         val currentPageNumber = params.key ?: PHOTOS_STARTING_PAGE_INDEX
-        val response =
-            if (query.isEmpty()) flickrApi.getPaginatedPhotos(currentPageNumber, params.loadSize)
-            else flickrApi.getPaginatedPhotosBySearchQuery(
-                query,
-                currentPageNumber,
-                params.loadSize
-            )
         return try {
+            val response =
+                if (query.isEmpty()) flickrApi.getPaginatedPhotos(currentPageNumber, params.loadSize)
+                else flickrApi.getPaginatedPhotosBySearchQuery(
+                    query,
+                    currentPageNumber,
+                    params.loadSize
+                )
             val photosList = response.photosData.photoList
 
             LoadResult.Page(
@@ -29,10 +28,7 @@ class PhotoPagingSource(
                 prevKey = if (currentPageNumber == PHOTOS_STARTING_PAGE_INDEX) null else currentPageNumber - 1,
                 nextKey = if (photosList.isEmpty()) null else currentPageNumber + 1
             )
-        } catch (exception: IOException) {
-            LoadResult.Error(exception)
-
-        } catch (exception: HttpException) {
+        } catch (exception: Exception) {
             LoadResult.Error(exception)
         }
     }

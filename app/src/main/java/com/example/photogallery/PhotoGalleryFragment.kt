@@ -14,7 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.photogallery.databinding.FragmentPhotoGalleryBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -50,8 +50,12 @@ class PhotoGalleryFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val adapter = PhotoAdapter()
         with(binding.photoGridRv) {
-            layoutManager = GridLayoutManager(requireContext(), 3)
-            this.adapter = adapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+            this.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = PhotoLoadStateAdapter(adapter::retry),
+                footer = PhotoLoadStateAdapter(adapter::retry)
+            )
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
