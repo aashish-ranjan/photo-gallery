@@ -9,11 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.photogallery.databinding.FragmentPhotoGalleryBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -56,6 +58,31 @@ class PhotoGalleryFragment: Fragment() {
                 header = PhotoLoadStateAdapter(adapter::retry),
                 footer = PhotoLoadStateAdapter(adapter::retry)
             )
+        }
+        adapter.addLoadStateListener { loadState ->
+            with(binding) {
+
+                photoGridRv.isVisible = loadState.source.refresh is LoadState.NotLoading
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                retryButton.isVisible = loadState.source.refresh is LoadState.Error
+                errorMessageTv.isVisible = loadState.source.refresh is LoadState.Error
+
+                //empty view
+                if (loadState.source.refresh is LoadState.NotLoading
+                    && loadState.append.endOfPaginationReached
+                    && adapter.itemCount < 1) {
+
+                    errorMessageTv.isVisible = true
+                    photoGridRv.isVisible = false
+                    errorMessageTv.setText(R.string.no_results_found)
+                } else {
+                    errorMessageTv.setText(R.string.failed_loading_photos_message)
+                }
+
+                retryButton.setOnClickListener {
+                    adapter.retry()
+                }
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

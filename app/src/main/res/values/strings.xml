@@ -3,5 +3,6 @@
     <string name="search">search</string>
     <string name="clear_search">Clear search</string>
     <string name="retry">Retry</string>
+    <string name="no_results_found">No results found for the specified query</string>
     <string name="failed_loading_photos_message">Failed to load photos</string>
 </resources>
