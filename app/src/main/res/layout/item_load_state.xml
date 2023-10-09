@@ -8,18 +8,21 @@
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/error_message_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/failed_loading_photos_message"/>
+        android:text="@string/failed_loading_photos_message"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/retry_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="@string/retry"/>
 
 </LinearLayout>

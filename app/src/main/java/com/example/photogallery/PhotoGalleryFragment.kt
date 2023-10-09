@@ -27,6 +27,7 @@ class PhotoGalleryFragment: Fragment() {
     private val photoGalleryViewModel: PhotoGalleryViewModel by viewModels {
         PhotoViewModelFactory(repository)
     }
+    private var togglePollingMenuItem: MenuItem? = null
 
     private var _binding: FragmentPhotoGalleryBinding? = null
     private val binding
@@ -92,6 +93,20 @@ class PhotoGalleryFragment: Fragment() {
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                photoGalleryViewModel.pollingEnabledFlow.collectLatest { pollingEnabled ->
+                    setMenuItemPollingStatus(pollingEnabled)
+                }
+            }
+        }
+    }
+
+    private fun setMenuItemPollingStatus(pollingEnabled: Boolean) {
+        togglePollingMenuItem?.setTitle(
+            if (pollingEnabled) R.string.stop_polling
+            else R.string.start_polling
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -109,6 +124,7 @@ class PhotoGalleryFragment: Fragment() {
                 return false
             }
         })
+        togglePollingMenuItem = menu.findItem(R.id.action_toggle_polling)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -117,12 +133,17 @@ class PhotoGalleryFragment: Fragment() {
                 photoGalleryViewModel.processSearchQuery("")
                 true
             }
+            R.id.action_toggle_polling -> {
+                photoGalleryViewModel.togglePollingStatus()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        togglePollingMenuItem = null
         _binding = null
     }
 }
