@@ -24,8 +24,11 @@ import kotlinx.coroutines.launch
 class PhotoGalleryFragment: Fragment() {
 
     private val repository = PhotosRepository.getInstance()
+    private val preferencesRepository = PreferencesRepository.getInstance()
+    private val workManager = WorkManagerSingleton.getInstance()
+
     private val photoGalleryViewModel: PhotoGalleryViewModel by viewModels {
-        PhotoViewModelFactory(repository)
+        PhotoViewModelFactory(repository, preferencesRepository, workManager)
     }
     private var togglePollingMenuItem: MenuItem? = null
 

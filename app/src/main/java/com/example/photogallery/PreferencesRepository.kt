@@ -23,6 +23,10 @@ class PreferencesRepository private constructor(private val dataStore: DataStore
         preferences[POLLING_ENABLED_PREFERENCES_KEY] ?: false
     }.distinctUntilChanged()
 
+    val lastFetchPhotoId: Flow<String> = dataStore.data.map { preferences ->
+        preferences[LAST_FETCH_PHOTO_ID] ?: ""
+    }.distinctUntilChanged()
+
     suspend fun saveSearchQuery(searchQuery: String) {
         dataStore.edit { preferences ->
             preferences[SEARCH_QUERY_PREFERENCES_KEY] = searchQuery
@@ -34,12 +38,19 @@ class PreferencesRepository private constructor(private val dataStore: DataStore
         }
     }
 
+    suspend fun saveLastFetchPhotoId(photoId: String) {
+        dataStore.edit { preferences ->
+            preferences[LAST_FETCH_PHOTO_ID] = photoId
+        }
+    }
+
     companion object {
         private var INSTANCE: PreferencesRepository? = null
         private const val PREFERENCES_DATA_STORE_FILE_NAME = "settings"
 
         val SEARCH_QUERY_PREFERENCES_KEY = stringPreferencesKey("searchQuery")
         val POLLING_ENABLED_PREFERENCES_KEY = booleanPreferencesKey("pollingEnabled")
+        val LAST_FETCH_PHOTO_ID = stringPreferencesKey("lastFetchPhotoId")
 
         fun initialise(context: Context) {
             if (INSTANCE == null) {

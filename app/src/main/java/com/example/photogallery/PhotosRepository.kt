@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.example.photogallery.api.FlickrApi
 import com.example.photogallery.model.Photo
 import kotlinx.coroutines.flow.Flow
+import java.lang.Exception
 import java.lang.IllegalStateException
 
 class PhotosRepository private constructor(private val flickrApi: FlickrApi) {
@@ -25,7 +26,21 @@ class PhotosRepository private constructor(private val flickrApi: FlickrApi) {
         }
     }
 
-    fun getPhotos(searchQuery: String): Flow<PagingData<Photo>> {
+    suspend fun getPhotos(searchQuery: String): List<Photo> {
+        return try {
+            val response = flickrApi.getPhotosBySearchQuery(searchQuery)
+            if (response.stat == "ok") {
+                response.photosData.photoList
+            } else {
+                listOf()
+            }
+        } catch (e: Exception) {
+            listOf()
+        }
+    }
+
+
+    fun getPaginatedPhotos(searchQuery: String): Flow<PagingData<Photo>> {
         return Pager(
             PagingConfig(pageSize = 20)
         ) {

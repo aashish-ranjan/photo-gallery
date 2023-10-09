@@ -18,4 +18,9 @@ interface FlickrApi {
         @Query("page") pageNumber: Int,
         @Query("per_page") numPhotosPerPage: Int
     ): PhotosResponse
+
+    @GET("services/rest?method=flickr.photos.search")
+    suspend fun getPhotosBySearchQuery(
+        @Query("text") searchQuery: String,
+    ): PhotosResponse
 }
