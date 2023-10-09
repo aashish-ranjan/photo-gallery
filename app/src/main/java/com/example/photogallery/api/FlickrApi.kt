@@ -5,9 +5,17 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface FlickrApi {
+
     @GET("services/rest?method=flickr.interestingness.getList")
-    suspend fun getPhotos(): PhotosResponse
+    suspend fun getPaginatedPhotos(
+        @Query("page") pageNumber: Int,
+        @Query("per_page") numPhotosPerPage: Int
+    ): PhotosResponse
 
     @GET("services/rest?method=flickr.photos.search")
-    suspend fun getPhotosBySearchQuery(@Query("text") searchQuery: String): PhotosResponse
+    suspend fun getPaginatedPhotosBySearchQuery(
+        @Query("text") searchQuery: String,
+        @Query("page") pageNumber: Int,
+        @Query("per_page") numPhotosPerPage: Int
+    ): PhotosResponse
 }

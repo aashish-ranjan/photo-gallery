@@ -1,8 +1,11 @@
 package com.example.photogallery
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.photogallery.api.FlickrApi
 import com.example.photogallery.model.Photo
-import java.lang.Exception
+import kotlinx.coroutines.flow.Flow
 import java.lang.IllegalStateException
 
 class PhotosRepository private constructor(private val flickrApi: FlickrApi) {
@@ -22,30 +25,11 @@ class PhotosRepository private constructor(private val flickrApi: FlickrApi) {
         }
     }
 
-    suspend fun getPhotos(): List<Photo> {
-        return try {
-            val response = flickrApi.getPhotos()
-            if (response.stat == "ok") {
-                response.photosData.photoList
-            } else {
-                throw Exception("Something went wrong!")
-            }
-        } catch (e: Exception) {
-            listOf()
-        }
-    }
-
-    suspend fun getPhotosBySearchQuery(searchQuery: String): List<Photo> {
-        return try {
-            val response = flickrApi.getPhotosBySearchQuery(searchQuery)
-            if (response.stat == "ok") {
-                response.photosData.photoList
-            } else {
-                throw Exception("Something went wrong!")
-            }
-        } catch (e: Exception) {
-            listOf()
-        }
-
+    fun getPhotos(searchQuery: String): Flow<PagingData<Photo>> {
+        return Pager(
+            PagingConfig(pageSize = 20)
+        ) {
+            PhotoPagingSource(flickrApi, searchQuery)
+        }.flow
     }
 }

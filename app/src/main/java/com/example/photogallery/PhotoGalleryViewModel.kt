@@ -3,35 +3,23 @@ package com.example.photogallery
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.photogallery.model.Photo
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class PhotoGalleryViewModel(private val repository: PhotosRepository) : ViewModel() {
     private val preferencesRepository = PreferencesRepository.getInstance()
 
-    private val _galleryItemsStateFlow: MutableStateFlow<List<Photo>> =
-        MutableStateFlow(emptyList())
-    val galleryItemsStateFlow = _galleryItemsStateFlow.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            preferencesRepository.searchQueryFlow.collectLatest { searchQuery ->
-                fetchPhotos(searchQuery)
-            }
-        }
-    }
-
-    private fun fetchPhotos(searchQuery: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _galleryItemsStateFlow.value = if (searchQuery.isEmpty()) repository.getPhotos()
-            else repository.getPhotosBySearchQuery(searchQuery)
-        }
-    }
+    val searchQueryResultsFlow: Flow<PagingData<Photo>> =
+        preferencesRepository.searchQueryFlow.flatMapLatest { searchQuery ->
+            repository.getPhotos(searchQuery)
+        }.cachedIn(viewModelScope)
 
     fun processSearchQuery(searchQuery: String) {
         viewModelScope.launch {

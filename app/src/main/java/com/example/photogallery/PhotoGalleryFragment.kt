@@ -43,7 +43,6 @@ class PhotoGalleryFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPhotoGalleryBinding.inflate(inflater, container, false)
-        binding.photoGridRv.layoutManager = GridLayoutManager(requireContext(), 3)
         return binding.root
     }
 
@@ -57,8 +56,8 @@ class PhotoGalleryFragment: Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                photoGalleryViewModel.galleryItemsStateFlow.collectLatest {
-                    adapter.submitList(it)
+                photoGalleryViewModel.searchQueryResultsFlow.collectLatest {
+                    adapter.submitData(it)
                 }
             }
         }
