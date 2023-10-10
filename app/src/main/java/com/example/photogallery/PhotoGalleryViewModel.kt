@@ -5,12 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.work.Constraints
-import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import com.example.photogallery.PhotosPollingWorker.Companion.PHOTOS_POLLING_WORK
 import com.example.photogallery.model.Photo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +21,7 @@ import kotlin.Exception
 class PhotoGalleryViewModel(
     private val repository: PhotosRepository,
     private val preferencesRepository: PreferencesRepository,
-    private val workManager: WorkManager
+    private val workManagerUseCase: WorkManagerUseCase
 ) : ViewModel() {
     private val _pollingEnabledFlow = MutableStateFlow(false)
     val pollingEnabledFlow = _pollingEnabledFlow.asStateFlow()
@@ -51,24 +45,12 @@ class PhotoGalleryViewModel(
             preferencesRepository.pollingEnabledFlow.collectLatest { pollingEnabled ->
                 _pollingEnabledFlow.value = pollingEnabled
                 if (pollingEnabled) {
-                    initiatePollingRequest()
+                    workManagerUseCase.initiatePollingWorkRequest()
                 } else {
-                    workManager.cancelUniqueWork(PHOTOS_POLLING_WORK)
+                    workManagerUseCase.cancelPollingWorkRequest()
                 }
             }
         }
-    }
-
-    private fun initiatePollingRequest() {
-        val pollingWorkConstraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.METERED)
-            .setRequiresCharging(true)
-            .build()
-        val pollingWorkRequest = OneTimeWorkRequestBuilder<PhotosPollingWorker>()
-            .addTag(PHOTOS_POLLING_WORK)
-            .setConstraints(pollingWorkConstraints)
-            .build()
-        workManager.enqueueUniqueWork(PHOTOS_POLLING_WORK, ExistingWorkPolicy.REPLACE, pollingWorkRequest)
     }
 
     fun processSearchQuery(searchQuery: String) {
@@ -87,11 +69,11 @@ class PhotoGalleryViewModel(
 class PhotoViewModelFactory(
     private val repository: PhotosRepository,
     private val preferencesRepository: PreferencesRepository,
-    private val workManager: WorkManager
+    private val workManagerUseCase: WorkManagerUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PhotoGalleryViewModel::class.java)) {
-            return PhotoGalleryViewModel(repository, preferencesRepository, workManager) as T
+            return PhotoGalleryViewModel(repository, preferencesRepository, workManagerUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

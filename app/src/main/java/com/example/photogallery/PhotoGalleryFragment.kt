@@ -30,10 +30,10 @@ class PhotoGalleryFragment: Fragment() {
 
     private val repository = PhotosRepository.getInstance()
     private val preferencesRepository = PreferencesRepository.getInstance()
-    private val workManager = WorkManagerSingleton.getInstance()
+    private val workManagerUseCase = WorkManagerUseCase.getInstance()
 
     private val photoGalleryViewModel: PhotoGalleryViewModel by viewModels {
-        PhotoViewModelFactory(repository, preferencesRepository, workManager)
+        PhotoViewModelFactory(repository, preferencesRepository, workManagerUseCase)
     }
     private var togglePollingMenuItem: MenuItem? = null
 
