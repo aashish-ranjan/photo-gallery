@@ -1,6 +1,7 @@
 package com.example.photogallery
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -61,7 +62,10 @@ class PhotoGalleryFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = PhotoAdapter()
+        val adapter = PhotoAdapter { uri ->
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+        }
         with(binding.photoGridRv) {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)

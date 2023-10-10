@@ -1,5 +1,6 @@
 package com.example.photogallery
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -7,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.photogallery.databinding.ItemPhotoBinding
 import com.example.photogallery.model.Photo
 
-class PhotoAdapter: PagingDataAdapter<Photo, PhotoViewHolder>(PhotoItemDiffCallback) {
+class PhotoAdapter(private val onItemClick: (Uri) -> Unit): PagingDataAdapter<Photo, PhotoViewHolder>(PhotoItemDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         val binding = ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PhotoViewHolder(binding)
@@ -16,7 +17,7 @@ class PhotoAdapter: PagingDataAdapter<Photo, PhotoViewHolder>(PhotoItemDiffCallb
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val photoItem = getItem(position)
         photoItem?.let {
-            holder.bind(it)
+            holder.bind(it, onItemClick)
         }
     }
 
