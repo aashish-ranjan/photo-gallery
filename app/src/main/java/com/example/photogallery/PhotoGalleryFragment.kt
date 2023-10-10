@@ -135,6 +135,7 @@ class PhotoGalleryFragment: Fragment() {
             }
         })
         togglePollingMenuItem = menu.findItem(R.id.action_toggle_polling)
+        setMenuItemPollingStatus(photoGalleryViewModel.pollingEnabledFlow.value)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
