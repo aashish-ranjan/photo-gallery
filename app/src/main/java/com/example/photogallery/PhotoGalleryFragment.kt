@@ -1,7 +1,6 @@
 package com.example.photogallery
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +20,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.photogallery.databinding.FragmentPhotoGalleryBinding
@@ -63,8 +63,8 @@ class PhotoGalleryFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = PhotoAdapter { uri ->
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            startActivity(intent)
+            val action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToPhotoDetailsFragment(uri)
+            findNavController().navigate(action)
         }
         with(binding.photoGridRv) {
             layoutManager = LinearLayoutManager(requireContext())

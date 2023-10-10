@@ -2,16 +2,17 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
     namespace = "com.example.photogallery"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.photogallery"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -66,7 +67,10 @@ dependencies {
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-    implementation("androidx.paging:paging-runtime:3.2.1")
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
 
+    val navVersion = "2.7.4"
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
 }
