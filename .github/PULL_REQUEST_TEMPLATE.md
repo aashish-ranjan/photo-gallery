@@ -1,22 +1,26 @@
-# Android Project Pull Request Template
-
 ## Relevant Links
-- **JIRA**: [Add JIRA link here]
-- **PRD**: [Add PRD link here]
-- **Figma Designs**: [Add Figma link here]
-- **API Contract**: [Add API contract link here]
-- **Additional Documentation**: (Feature solution doc, HLD, LLD, etc.): [Add link here]
+
+- **JIRA**: [JIRA](Add JIRA link here)
+- **PRD**: [PRD](Add PRD link here)
+- **Figma**: [Figma](Add Figma link here)
+- **API Contract**: [API Contract](Add API contract link here)
+- **Other**: [Other](Add link here)
 
 ## Description of Changes
-- **Before**: Briefly describe the previous state or functionality before the changes.
-- **After**: Describe the state or functionality after the changes have been applied.
-- **Changes Done**: List down the specific changes made in this PR.
+<!-- Provide a summary of the changes made in this PR. Use bullet points or paragraph format. -->
 
-## Visual Aids
-### Screenshots (if applicable)
-- **Before**: [Add image link for the before state]
-- **After**: [Add image link for the after state]
+### Before
+<!-- Briefly describe the previous state or functionality. -->
+- 
 
-### Screen Recording (if applicable)
-- **Before**: [Add video link for the before state]
-- **After**: [Add video link for the after state]
+### After
+<!-- Describe the state or functionality after the changes. -->
+- 
+
+### Changes Done
+<!-- List or describe the specific changes made in this PR. -->
+- 
+
+## Screenshots (if applicable)
+
+Include any relevant screenshots or screen recordings here.
