@@ -18,4 +18,5 @@ class MainActivity : AppCompatActivity() {
     companion object {
         fun createIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
+
 }
