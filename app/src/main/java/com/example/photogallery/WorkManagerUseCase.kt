@@ -27,6 +27,8 @@ class WorkManagerUseCase private constructor(context: Context) {
             ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
             pollingWorkRequest
         )
+
+
     }
 
     fun cancelPollingWorkRequest() {
